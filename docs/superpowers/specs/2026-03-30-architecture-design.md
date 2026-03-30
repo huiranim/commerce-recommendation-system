@@ -102,8 +102,7 @@ commerce-recommendation-system/
 |---|---|---|---|
 | api-server | 직접 빌드 | 8080 | HTTP API |
 | event-processor | 직접 빌드 | 8081 | Kafka Consumer |
-| kafka | confluentinc/cp-kafka | 9092 | 이벤트 브로커 |
-| zookeeper | confluentinc/cp-zookeeper | 2181 | Kafka 의존 |
+| kafka | confluentinc/cp-kafka | 9092 | 이벤트 브로커 (KRaft 모드) |
 | redis | redis:7-alpine | 6379 | 랭킹/추천/Idempotency |
 | mysql | mysql:8 | 3306 | 마스터 데이터 |
 
@@ -451,7 +450,7 @@ public String getCategoryId(String productId) {
 | Redis | ElastiCache Redis 7 (cache.t3.micro) | |
 
 > Confluent Cloud free tier 대신 Self-hosted Kafka를 선택하는 경우
-> EC2 1대에 Kafka + Zookeeper를 함께 운영 가능 (데모 수준).
+> KRaft 모드로 ZooKeeper 없이 EC2 1대에서 단독 운영 가능 (데모 수준).
 
 ---
 
