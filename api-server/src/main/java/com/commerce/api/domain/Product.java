@@ -24,7 +24,7 @@ public class Product {
     private BigDecimal price;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 10)
     private ProductStatus status = ProductStatus.ACTIVE;
 
     @CreationTimestamp
@@ -44,4 +44,5 @@ public class Product {
     public Category getCategory() { return category; }
     public BigDecimal getPrice() { return price; }
     public ProductStatus getStatus() { return status; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
 }

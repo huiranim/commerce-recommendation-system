@@ -18,6 +18,11 @@ public class Category {
 
     protected Category() {}
 
+    /**
+     * @param id   semantic string identifier (e.g. "electronics", "sports") used as a natural key
+     *             and embedded in Redis ranking keys such as {@code ranking:trending:category:{id}:1h}
+     * @param name human-readable display name
+     */
     public Category(String id, String name) {
         this.id = id;
         this.name = name;
