@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, String> {
+    @EntityGraph(attributePaths = "category")
     List<Product> findAllByIdInAndStatus(List<String> ids, ProductStatus status);
 
     @EntityGraph(attributePaths = "category")

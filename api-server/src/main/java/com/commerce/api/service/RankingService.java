@@ -7,12 +7,14 @@ import com.commerce.api.repository.ProductRepository;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 public class RankingService {
 
     private static final String GLOBAL_PREFIX = "ranking:trending:";

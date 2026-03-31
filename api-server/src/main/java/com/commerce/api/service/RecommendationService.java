@@ -6,11 +6,13 @@ import com.commerce.api.dto.RecommendationResponse.RecommendationItem;
 import com.commerce.api.repository.ProductRepository;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 public class RecommendationService {
 
     private static final String USER_PREFIX = "recommendation:user:";
@@ -33,6 +35,7 @@ public class RecommendationService {
     public RecommendationResponse getCategoryRecommendations(String categoryId, int limit) {
         Set<String> productIds = redisTemplate.opsForZSet()
             .reverseRange(CATEGORY_PREFIX + categoryId, 0, limit - 1);
+        // userId is null for category-scoped recommendations (no user context)
         return buildResponse(null, productIds, "CATEGORY_POPULAR");
     }
 

@@ -2,10 +2,14 @@ package com.commerce.api.controller;
 
 import com.commerce.api.dto.RankingResponse;
 import com.commerce.api.service.RankingService;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Positive;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/rankings")
+@Validated
 public class RankingController {
 
     private final RankingService rankingService;
@@ -17,7 +21,7 @@ public class RankingController {
     @GetMapping("/trending")
     public RankingResponse getTrending(
             @RequestParam(defaultValue = "1h") String window,
-            @RequestParam(defaultValue = "20") int limit) {
+            @RequestParam(defaultValue = "20") @Positive @Max(100) int limit) {
         return rankingService.getTrending(window, limit);
     }
 
@@ -25,7 +29,7 @@ public class RankingController {
     public RankingResponse getTrendingByCategory(
             @PathVariable String categoryId,
             @RequestParam(defaultValue = "1h") String window,
-            @RequestParam(defaultValue = "20") int limit) {
+            @RequestParam(defaultValue = "20") @Positive @Max(100) int limit) {
         return rankingService.getTrendingByCategory(categoryId, window, limit);
     }
 }
