@@ -4,6 +4,7 @@ import com.commerce.api.domain.Category;
 import com.commerce.api.domain.Product;
 import com.commerce.api.dto.ProductRequest;
 import com.commerce.api.exception.BusinessException;
+import com.commerce.api.exception.ErrorCode;
 import com.commerce.api.repository.CategoryRepository;
 import com.commerce.api.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
@@ -32,11 +33,13 @@ class ProductServiceTest {
 
         when(categoryRepository.findById("electronics")).thenReturn(Optional.of(category));
         when(productRepository.save(any())).thenReturn(product);
+        when(productRepository.findWithCategoryById(any())).thenReturn(Optional.of(product));
 
         var result = productService.create(req);
 
         assertThat(result.getName()).isEqualTo("노트북");
         assertThat(result.getCategory().getId()).isEqualTo("electronics");
+        verify(productRepository, times(1)).save(any());
     }
 
     @Test
@@ -46,14 +49,18 @@ class ProductServiceTest {
 
         assertThatThrownBy(() -> productService.create(req))
             .isInstanceOf(BusinessException.class)
-            .hasMessageContaining("unknown");
+            .hasMessageContaining("unknown")
+            .extracting(e -> ((BusinessException) e).getErrorCode())
+            .isEqualTo(ErrorCode.CATEGORY_NOT_FOUND);
     }
 
     @Test
     void findById_없는_상품_예외() {
-        when(productRepository.findById("bad-id")).thenReturn(Optional.empty());
+        when(productRepository.findWithCategoryById("bad-id")).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> productService.findById("bad-id"))
-            .isInstanceOf(BusinessException.class);
+            .isInstanceOf(BusinessException.class)
+            .extracting(e -> ((BusinessException) e).getErrorCode())
+            .isEqualTo(ErrorCode.PRODUCT_NOT_FOUND);
     }
 }

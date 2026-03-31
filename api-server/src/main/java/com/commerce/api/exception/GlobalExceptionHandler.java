@@ -2,6 +2,8 @@ package com.commerce.api.exception;
 
 import com.commerce.common.dto.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -10,6 +12,8 @@ import java.time.Instant;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponse> handleBusiness(BusinessException ex, HttpServletRequest req) {
@@ -32,8 +36,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneral(Exception ex, HttpServletRequest req) {
+        log.error("Unhandled exception for {} {}", req.getMethod(), req.getRequestURI(), ex);
         return ResponseEntity.internalServerError()
-            .body(new ErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR.name(), ex.getMessage(),
+            .body(new ErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR.name(),
+                ErrorCode.INTERNAL_SERVER_ERROR.getDefaultMessage(),
                 Instant.now(), req.getRequestURI()));
     }
 }

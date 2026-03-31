@@ -20,6 +20,9 @@ public class UserService {
 
     @Transactional
     public User create(UserRequest req) {
+        if (userRepository.existsByEmail(req.email())) {
+            throw new BusinessException(ErrorCode.DUPLICATE_EMAIL, req.email());
+        }
         return userRepository.save(new User(req.name(), req.email()));
     }
 
