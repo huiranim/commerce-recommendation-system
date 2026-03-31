@@ -1,7 +1,5 @@
 package com.commerce.api.kafka;
 
-import com.commerce.api.exception.BusinessException;
-import com.commerce.api.exception.ErrorCode;
 import com.commerce.common.event.UserBehaviorEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,8 +25,8 @@ public class EventProducer {
         kafkaTemplate.send(topic, event.userId(), event)
             .whenComplete((result, ex) -> {
                 if (ex != null) {
-                    log.error("Failed to send event: {}, error: {}", event.eventId(), ex.getMessage());
-                    throw new BusinessException(ErrorCode.EVENT_PUBLISH_FAILED, event.eventId());
+                    log.error("Failed to send event: {}", event.eventId(), ex);
+                    return;
                 }
                 log.debug("Event sent: {}", event.eventId());
             });
