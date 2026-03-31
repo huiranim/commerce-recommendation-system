@@ -79,5 +79,6 @@ class EventConsumerTest {
 
         verify(idempotencyService).unmarkProcessed("evt-1");
         verify(dlqProducer).send(event);
+        verifyNoInteractions(rankingService, recommendationService);
     }
 }

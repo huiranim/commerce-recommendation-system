@@ -21,12 +21,14 @@ public class RecommendationService {
     public void updateUserRecommendation(String userId, String productId, double score) {
         String key = USER_PREFIX + userId;
         redisTemplate.opsForZSet().add(key, productId, score);
+        // Sliding window: TTL resets on each write so active users always have fresh recommendations
         redisTemplate.expire(key, USER_TTL);
     }
 
     public void updateCategoryRecommendation(String categoryId, String productId, double score) {
         String key = CATEGORY_PREFIX + categoryId;
         redisTemplate.opsForZSet().add(key, productId, score);
+        // Sliding window: TTL resets on each write
         redisTemplate.expire(key, CATEGORY_TTL);
     }
 }

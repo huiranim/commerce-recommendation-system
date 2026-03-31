@@ -13,12 +13,12 @@ public class DlqProducer {
     private static final Logger log = LoggerFactory.getLogger(DlqProducer.class);
 
     private final KafkaTemplate<String, UserBehaviorEvent> kafkaTemplate;
+    private final String dlqTopic;
 
-    @Value("${kafka.topic.dlq}")
-    private String dlqTopic;
-
-    public DlqProducer(KafkaTemplate<String, UserBehaviorEvent> kafkaTemplate) {
+    public DlqProducer(KafkaTemplate<String, UserBehaviorEvent> kafkaTemplate,
+                       @Value("${kafka.topic.dlq}") String dlqTopic) {
         this.kafkaTemplate = kafkaTemplate;
+        this.dlqTopic = dlqTopic;
     }
 
     public void send(UserBehaviorEvent event) {
